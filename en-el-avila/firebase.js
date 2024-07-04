@@ -1,19 +1,3 @@
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js';
-
-
-const firebaseConfig = {
-   apiKey: "AIzaSyAsZGHgxSdi3Bxp4_4EubjDkJI0HfsHgSo",
-   authDomain: "miguel-leon-4d8e7.firebaseapp.com",
-   projectId: "miguel-leon-4d8e7",
-   storageBucket: "miguel-leon-4d8e7.appspot.com",
-   messagingSenderId: "922059649885",
-   appId: "1:922059649885:web:99ca7e241c14864616eeb4"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-export default db;
-
+import{getFirestore as e,collection as t,addDoc as s}from"https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";import a from"./firebase.js";let d=document,$form=d.querySelector(".contact-form_form"),countUserVisit=async()=>{let e=new Date,r=t(a,"users");try{await s(r,{info:`${e.toISOString().slice(0,10)} - ${e.toLocaleTimeString()} - ${Intl.DateTimeFormat().resolvedOptions().timeZone}`})}catch(n){console.log(n),await s(r,{info:`${n}`})}},canCountVisit=()=>{let e=!1,t=localStorage;return null===t.getItem("user")&&(t.setItem("user",""),e=!0),e},validateInputs=e=>{let t=!1,s=[RegExp(/^[a-zA-ZáéíóúÁÉÍÓÚ ]*$/g),RegExp(/^[a-zA-ZáéíóúÁÉÍÓÚ ]*$/g),RegExp(/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/),RegExp(/^[a-zA-ZáéíóúÁÉÍÓÚ ]*$/g),];return e.forEach((e,t)=>{if(e.nextElementSibling.classList.contains("span_error_input")&&e.nextElementSibling.remove(),0===e.value.trim().length){e.outerHTML+='<span class ="span_error_input">Se encuentra vacio</span>';return}if(!s[t].test(e.value.trim())){e.outerHTML+=`<span class ="span_error_input">Debe agregar un ${e.getAttribute("name")} v\xe1lido</span>`;return}}),null===$form.querySelector(".span_error_input")&&(t=!0),t},sendMail=async()=>{let e=d.querySelector(".contact-form_loader"),t=d.querySelector(".contact-form_form"),s=d.querySelector(".span_success_send");e.classList.remove("hide");try{let a=await fetch("https://formsubmit.co/ajax/migueleonrojas@gmail.com",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({name:`Nombre: ${t.nombre.value} | Correo: ${t.correo.value}`,message:`Asunto: ${t.asunto.value}
+   Comentario:
+   ${t.comentario.value}`})}),r=await a.json();if(s.classList.add("span_success_send"),e.classList.add("hide"),s.innerHTML="Se ha mandado el correo con \xe9xito",s.classList.remove("hide"),t.reset(),s.classList.add("span_success_send"),setTimeout(()=>{s.classList.add("hide")},3e3),r.err)throw{status:a.status,statusText:a.statusText}}catch(n){let o=n.statusText||"El correo no se pudo enviar, intente m\xe1s tarde";s.classList.remove("span_success_send"),s.classList.add("span_error_input"),e.classList.add("hide"),s.innerHTML=o,s.classList.remove("hide"),setTimeout(()=>{s.classList.add("hide"),s.classList.remove("span_error_input")},3e3),t.reset()}};d.addEventListener("DOMContentLoaded",()=>{if(!canCountVisit())return!1;countUserVisit()}),$form.addEventListener("submit",e=>{e.preventDefault();if(!validateInputs([...Array.from($form.querySelectorAll("* [name]")).filter(e=>e)]))return!1;window.scroll(0,d.body.offsetHeight),sendMail()});
